@@ -2,6 +2,13 @@
 <?php
 $message = '';
 $t=time();
+$day = date('d');
+
+$count_down_sale = (31-$day);
+if($count_down_sale<=20){
+	$count_down_sale = 20;
+}
+
 if(isset($_POST['name'])) {
 $arr = array(
     'properties' => array(
@@ -124,7 +131,7 @@ $curl_errors = curl_error($ch);
 				<span id="started"></span>
 			</div>
 			<div class="percent">
-				<span>-30%</span>
+				<span>-<?php echo $count_down_sale; ?>%</span>
 			</div>
 			<div class="text">
 				<i>Chương trình Count Down Sale với <b>ưu đãi thay đổi theo từng ngày</b>  cho dịch vụ Bấm Mí Dove Eyes. <span><b>Đăng ký ngay hôm nay</b> để được nhận ưu đãi lớn nhất.</i></span>
@@ -324,7 +331,7 @@ $curl_errors = curl_error($ch);
 				<span id="started1"></span>
 			</div>
 			<div class="percent">
-				<span>-30%</span>
+				<span>-<?php echo $count_down_sale; ?>%</span>
 			</div>
 			<div class="text">
 				<i>Chương trình Count Down Sale với <b>ưu đãi thay đổi theo từng ngày</b>  cho dịch vụ Bấm Mí Dove Eyes. <br/><b>Đăng ký ngay hôm nay</b> để được nhận ưu đãi lớn nhất.</i>
@@ -332,7 +339,7 @@ $curl_errors = curl_error($ch);
 		</div>
 		<div class="form slide" id="register">
 			<div>
-				<h3> Đăng ký tham gia <b>Nhận ưu đãi lên tới 30%</b></h3>
+				<h3> Đăng ký tham gia <b>Nhận ưu đãi lên tới <?php echo $count_down_sale; ?>%</b></h3>
 				<h4>Áp dụng cho 50 khách hàng đăng kí sớm nhất</h4>
 				<article>
 					<form class="contact-form" id="contactform" method="post" action="index.php#register">
