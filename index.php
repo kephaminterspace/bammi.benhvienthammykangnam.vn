@@ -8,8 +8,11 @@ $count_down_sale = (31-$day);
 if($count_down_sale<=20){
 	$count_down_sale = 20;
 }
-
+var_dump($count_down_sale);
 if(isset($_POST['name'])) {
+
+	var_dump("a");
+
 $arr = array(
     'properties' => array(
         array(
@@ -52,7 +55,7 @@ $arr = array(
 );
 
 $post_json = json_encode($arr);
-
+	var_dump($post_json);
 $endpoint = "https://api.hubapi.com/contacts/v1/contact/?hapikey=833abbb1-b326-400b-bdea-49f369ebe644";
 $ch = @curl_init();
 @curl_setopt($ch, CURLOPT_POST, true);
@@ -61,6 +64,8 @@ $ch = @curl_init();
 @curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = @curl_exec($ch);
+	var_dump($response);
+die('SSSSSSSS');
 $status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $curl_errors = curl_error($ch);
 @curl_close($ch);
