@@ -42,7 +42,7 @@ $arr = array(
         ),
         array(
             'property' => 'identifier',
-            'value' => $t
+            'value' => (string)$t
         ),
         array(
             'property' => 'hs_lead_status',
