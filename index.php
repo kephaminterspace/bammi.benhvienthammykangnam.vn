@@ -4,7 +4,10 @@ $message = '';
 $t=time();
 $day = date('d');
 
-$count_down_sale = "XXX";
+$count_down_sale = (31-$day);
+if($count_down_sale<=20){
+	$count_down_sale = 20;
+}
 
 if(isset($_POST['name'])) {
 $arr = array(
