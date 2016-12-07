@@ -1,4 +1,4 @@
-<!---->
+
 <?php
 $message = '';
 $t=time();
