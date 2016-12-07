@@ -347,7 +347,7 @@ $curl_errors = curl_error($ch);
 				<h3> Đăng ký tham gia <b>Nhận ưu đãi lên tới <?php echo $count_down_sale; ?>%</b></h3>
 				<h4>Áp dụng cho 50 khách hàng đăng kí sớm nhất</h4>
 				<article>
-					<form class="contact-form" id="contactform" method="post" action="index.php#register">
+					<form class="contact-form" id="contactform" method="post" action="index.php">
 						<?php if(isset($message)){ ?>
 							<p style="color: red; "> <?php echo $message; ?></p>
 						<?php } ?>
