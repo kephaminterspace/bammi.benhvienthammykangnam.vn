@@ -76,9 +76,8 @@ $curl_errors = curl_error($ch);
         $message = 'Email đã tồn tại';
     }
 	var_dump('5');
+	die;
 }
-
-die;
 
 ?>
 
