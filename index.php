@@ -1,70 +1,4 @@
-<!---->
-<?php
-$message = '';
-$t=time();
-if(isset($_POST['name'])) {
-	$arr = array(
-		'properties' => array(
-			array(
-				'property' => 'email',
-				'value' => $_POST['email']
-			),
-			array(
-				'property' => 'firstname',
-				'value' => $_POST['name']
-			),
-			array(
-				'property' => 'lastname',
-				'value' => ''
-			),
-			array(
-				'property' => 'phone',
-				'value' => $_POST['phone']
-			),
-			array(
-				'property' => 'region',
-				'value' => $_POST['region']
-			),
-			array(
-				'property' => 'aff_source',
-				'value' => $_POST['aff_source']
-			),
-			array(
-				'property' => 'aff_sid',
-				'value' => $_POST['aff_sid']
-			),
-			array(
-				'property' => 'identifier',
-				'value' => $t
-			),
-			array(
-				'property' => 'hs_lead_status',
-				'value' => "NEW"
-			)
-		)
-	);
 
-	$post_json = json_encode($arr);
-
-	$endpoint = "https://api.hubapi.com/contacts/v1/contact/?hapikey=833abbb1-b326-400b-bdea-49f369ebe644";
-	$ch = @curl_init();
-	@curl_setopt($ch, CURLOPT_POST, true);
-	@curl_setopt($ch, CURLOPT_POSTFIELDS, $post_json);
-	@curl_setopt($ch, CURLOPT_URL, $endpoint);
-	@curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-	@curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	$response = @curl_exec($ch);
-	$status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	$curl_errors = curl_error($ch);
-	@curl_close($ch);
-	if ($status_code == 200) {
-		header('Location: thank.php');
-		die();
-	}else{
-		$message = 'Email đã tồn tại';
-	}
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -336,19 +270,9 @@ if(isset($_POST['name'])) {
 				<h4>Áp dụng cho 50 khách hàng đăng kí sớm nhất</h4>
 				<article>
 					<form class="contact-form" id="contactform" method="post" action="index.php#register">
-						<?php if(isset($message)){ ?>
-							<p style="color: red; "> <?php echo $message; ?></p>
-						<?php } ?>
+
 						<div class="fct">
-							<input id="name" name="name" value="<?php if(isset($_POST['name'])) { echo $_POST['name']; } ?>" type="text" required placeholder="Họ tên *:" required oninvalid="setCustomValidity('Họ tên không để trống')" oninput="setCustomValidity('')">
-							<input id="email" name="email" value="<?php if(isset($_POST['email'])) { echo $_POST['email']; } ?>" type="text" required placeholder="Email *:" required pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" oninvalid="setCustomValidity('Email không chính xác!')" oninput="setCustomValidity('')">
-							<input id="phone" name="phone" value="<?php if(isset($_POST['phone'])) { echo $_POST['phone']; } ?>" type="text" required placeholder="Điện thoại *:" required pattern="^[0-9]{10,12}$" oninvalid="setCustomValidity('Số điện thoại không đúng')" oninput="setCustomValidity('')">
-							<select id="region" name="region" required oninvalid="setCustomValidity('Đăng ký tư vấn tại không để trống')" oninput="setCustomValidity('')">
-								<option value="" style="color:#ccc">Đăng ký tư vấn tại</option>
-								<option value="1" style="color:blue" <?php if(isset($_POST['region'])){if($_POST['region']==1) { ?> selected <?php } }?> >TP Hồ Chí Minh</option>
-								<option value="2" style="color:red" <?php if(isset($_POST['region'])){if($_POST['region']==2) { ?> selected <?php } }?>>Hà Nội</option>
-							</select>
-							<!--					<textarea name="itext" id="itext" cols="30" rows="10" placeholder="Dịch vụ quan tâm *:"></textarea>-->
+
 							<input type="hidden" name="aff_source" id="aff_source" class="aff_source" value=""/>
 							<input type="hidden" name="aff_sid" id="aff_sid" class="aff_sid" value=""/>
 						</div>
