@@ -55,6 +55,7 @@ $arr = array(
 $post_json = json_encode($arr);
 	var_dump('E1');
 $endpoint = "https://api.hubapi.com/contacts/v1/contact/?hapikey=833abbb1-b326-400b-bdea-49f369ebe644";
+	var_dump('E12');
 $ch = @curl_init();
 	var_dump('E2');
 @curl_setopt($ch, CURLOPT_POST, true);
