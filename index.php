@@ -1,75 +1,69 @@
-
+<!---->
 <?php
 $message = '';
 $t=time();
-$day = date('d');
-
-$count_down_sale = (31-$day);
-if($count_down_sale<=20){
-	$count_down_sale = 20;
-}
-
 if(isset($_POST['name'])) {
-$arr = array(
-    'properties' => array(
-        array(
-            'property' => 'email',
-            'value' => $_POST['email']
-        ),
-        array(
-            'property' => 'firstname',
-            'value' => $_POST['name']
-        ),
-        array(
-            'property' => 'lastname',
-            'value' => ''
-        ),
-        array(
-            'property' => 'phone',
-            'value' => $_POST['phone']
-        ),
-        array(
-            'property' => 'region',
-            'value' => $_POST['region']
-        ),
-        array(
-            'property' => 'aff_source',
-            'value' => $_POST['aff_source']
-        ),
-        array(
-            'property' => 'aff_sid',
-            'value' => $_POST['aff_sid']
-        ),
-        array(
-            'property' => 'identifier',
-            'value' => (string)$t
-        ),
-        array(
-            'property' => 'hs_lead_status',
-            'value' => "NEW"
-        )
-    )
-);
+	$arr = array(
+		'properties' => array(
+			array(
+				'property' => 'email',
+				'value' => $_POST['email']
+			),
+			array(
+				'property' => 'firstname',
+				'value' => $_POST['name']
+			),
+			array(
+				'property' => 'lastname',
+				'value' => ''
+			),
+			array(
+				'property' => 'phone',
+				'value' => $_POST['phone']
+			),
+			array(
+				'property' => 'region',
+				'value' => $_POST['region']
+			),
+			array(
+				'property' => 'aff_source',
+				'value' => $_POST['aff_source']
+			),
+			array(
+				'property' => 'aff_sid',
+				'value' => $_POST['aff_sid']
+			),
+			array(
+				'property' => 'identifier',
+				'value' => $t
+			),
+			array(
+				'property' => 'hs_lead_status',
+				'value' => "NEW"
+			)
+		)
+	);
 
-$post_json = json_encode($arr);
-$endpoint = "https://api.hubapi.com/contacts/v1/contact/?hapikey=833abbb1-b326-400b-bdea-49f369ebe644";
-$ch = @curl_init();
-@curl_setopt($ch, CURLOPT_POST, true);
-@curl_setopt($ch, CURLOPT_POSTFIELDS, $post_json);
-@curl_setopt($ch, CURLOPT_URL, $endpoint);
-@curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-@curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = @curl_exec($ch);
-$status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$curl_errors = curl_error($ch);
-@curl_close($ch);
-    if ($status_code == 200) {
-        header('Location: thank.php');
-        die();
-    }else{
-        $message = 'Email đã tồn tại';
-    }
-    }
+	$post_json = json_encode($arr);
+
+	$endpoint = "https://api.hubapi.com/contacts/v1/contact/?hapikey=833abbb1-b326-400b-bdea-49f369ebe644";
+	$ch = @curl_init();
+	@curl_setopt($ch, CURLOPT_POST, true);
+	@curl_setopt($ch, CURLOPT_POSTFIELDS, $post_json);
+	@curl_setopt($ch, CURLOPT_URL, $endpoint);
+	@curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+	@curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$response = @curl_exec($ch);
+	$status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	$curl_errors = curl_error($ch);
+	@curl_close($ch);
+	if ($status_code == 200) {
+		header('Location: thank.php');
+		die();
+	}else{
+		$message = 'Email đã tồn tại';
+	}
+}
 ?>
 
 <!DOCTYPE html>
@@ -130,7 +124,7 @@ $curl_errors = curl_error($ch);
 				<span id="started"></span>
 			</div>
 			<div class="percent">
-				<span>-<?php echo $count_down_sale; ?>%</span>
+				<span>-30%</span>
 			</div>
 			<div class="text">
 				<i>Chương trình Count Down Sale với <b>ưu đãi thay đổi theo từng ngày</b>  cho dịch vụ Bấm Mí Dove Eyes. <span><b>Đăng ký ngay hôm nay</b> để được nhận ưu đãi lớn nhất.</i></span>
@@ -330,7 +324,7 @@ $curl_errors = curl_error($ch);
 				<span id="started1"></span>
 			</div>
 			<div class="percent">
-				<span>-<?php echo $count_down_sale; ?>%</span>
+				<span>-30%</span>
 			</div>
 			<div class="text">
 				<i>Chương trình Count Down Sale với <b>ưu đãi thay đổi theo từng ngày</b>  cho dịch vụ Bấm Mí Dove Eyes. <br/><b>Đăng ký ngay hôm nay</b> để được nhận ưu đãi lớn nhất.</i>
@@ -338,10 +332,10 @@ $curl_errors = curl_error($ch);
 		</div>
 		<div class="form slide" id="register">
 			<div>
-				<h3> Đăng ký tham gia <b>Nhận ưu đãi lên tới <?php echo $count_down_sale; ?>%</b></h3>
+				<h3> Đăng ký tham gia <b>Nhận ưu đãi lên tới 30%</b></h3>
 				<h4>Áp dụng cho 50 khách hàng đăng kí sớm nhất</h4>
 				<article>
-					<form class="contact-form" id="contactform" method="post" action="#register">
+					<form class="contact-form" id="contactform" method="post" action="index.php#register">
 						<?php if(isset($message)){ ?>
 							<p style="color: red; "> <?php echo $message; ?></p>
 						<?php } ?>
@@ -354,7 +348,7 @@ $curl_errors = curl_error($ch);
 								<option value="1" style="color:blue" <?php if(isset($_POST['region'])){if($_POST['region']==1) { ?> selected <?php } }?> >TP Hồ Chí Minh</option>
 								<option value="2" style="color:red" <?php if(isset($_POST['region'])){if($_POST['region']==2) { ?> selected <?php } }?>>Hà Nội</option>
 							</select>
-	<!--					<textarea name="itext" id="itext" cols="30" rows="10" placeholder="Dịch vụ quan tâm *:"></textarea>-->
+							<!--					<textarea name="itext" id="itext" cols="30" rows="10" placeholder="Dịch vụ quan tâm *:"></textarea>-->
 							<input type="hidden" name="aff_source" id="aff_source" class="aff_source" value=""/>
 							<input type="hidden" name="aff_sid" id="aff_sid" class="aff_sid" value=""/>
 						</div>
