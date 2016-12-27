@@ -1,73 +1,123 @@
 
 <?php
-$message = '';
-$t=time();
-$day = date('d');
 
-$count_down_sale = (31-$day);
-if($count_down_sale<=20){
-	$count_down_sale = 20;
-}
+	$message = '';
+	$t=time();
+	$day = date('d');
 
-if(isset($_POST['name'])) {
-	$arr = array(
-		'properties' => array(
-			array(
-				'property' => 'email',
-				'value' => $_POST['email']
-			),
-			array(
-				'property' => 'firstname',
-				'value' => $_POST['name']
-			),
-			array(
-				'property' => 'lastname',
-				'value' => ''
-			),
-			array(
-				'property' => 'phone',
-				'value' => $_POST['phone']
-			),
-			array(
-				'property' => 'region',
-				'value' => $_POST['region']
-			),
-			array(
-				'property' => 'aff_source',
-				'value' => $_POST['aff_source']
-			),
-			array(
-				'property' => 'aff_sid',
-				'value' => $_POST['aff_sid']
-			),
-			array(
-				'property' => 'identifier',
-				'value' => (string)$t
-			),
-			array(
-				'property' => 'hs_lead_status',
-				'value' => "NEW"
+	$count_down_sale = (31-$day);
+	if($count_down_sale<=20){
+		$count_down_sale = 20;
+	}
+
+if(isset($_POST['submit'])) {
+	function gen_uuid() {
+		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+			// 32 bits for "time_low"
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+
+			// 16 bits for "time_mid"
+			mt_rand( 0, 0xffff ),
+
+			// 16 bits for "time_hi_and_version",
+			// four most significant bits holds version number 4
+			mt_rand( 0, 0x0fff ) | 0x4000,
+
+			// 16 bits, 8 bits for "clk_seq_hi_res",
+			// 8 bits for "clk_seq_low",
+			// two most significant bits holds zero and one for variant DCE1.1
+			mt_rand( 0, 0x3fff ) | 0x8000,
+
+			// 48 bits for "node"
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+		);
+	}
+
+	function validatePhone($phone_text){
+		$phone = preg_replace('/[^0-9]/', '', $phone_text);
+		if(strlen($phone) === 10 || strlen($phone) === 11) {
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	function validateEmail($email){
+		return filter_var($email, FILTER_VALIDATE_EMAIL);
+	}
+
+	if (!($_POST['name'])) {
+		$check_messages['name'] = 'style="border: 2px solid red;"';
+	}
+
+	if (!validatePhone($_POST['phone'])) {
+		$check_messages['phone'] = 'style="border: 2px solid red;"';
+	}
+
+	$email = $_POST['email'];
+	if (!validateEmail($email)) {
+		$check_messages['email'] = 'style="border: 2px solid red;"';
+	}
+
+	if (!($_POST['region'])) {
+		$check_messages['region'] = 'style="border: 2px solid red;"';
+	}
+
+	if (count($check_messages) == 0) {
+		$arr = array(
+			'properties' => array(
+				array(
+					'property' => 'email',
+					'value' => $_POST['email']
+				),
+				array(
+					'property' => 'firstname',
+					'value' => $_POST['name']
+				),
+				array(
+					'property' => 'phone',
+					'value' => $_POST['phone']
+				),
+				array(
+					'property' => 'region',
+					'value' => $_POST['region']
+				),
+				array(
+					'property' => 'aff_source',
+					'value' => $_POST['aff_source']
+				),
+				array(
+					'property' => 'aff_sid',
+					'value' => $_POST['aff_sid']
+				),
+				array(
+					'property' => 'identifier',
+					'value' => gen_uuid()
+				),
+				array(
+					'property' => 'hs_lead_status',
+					'value' => "NEW"
+				)
 			)
-		)
-	);
-
-	$post_json = json_encode($arr);
-	$endpoint = "https://api.hubapi.com/contacts/v1/contact/?hapikey=833abbb1-b326-400b-bdea-49f369ebe644";
-	$ch = @curl_init();
-	@curl_setopt($ch, CURLOPT_POST, true);
-	@curl_setopt($ch, CURLOPT_POSTFIELDS, $post_json);
-	@curl_setopt($ch, CURLOPT_URL, $endpoint);
-	@curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-	@curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	$response = @curl_exec($ch);
-	$status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	$curl_errors = curl_error($ch);
-	@curl_close($ch);
-	if ($status_code == 200) {
-		header('Location: thank.php');
-		die();
-	}else{
-		$message = 'Email đã tồn tại';
+		);
+		$post_json = json_encode($arr);
+		$endpoint = "https://api.hubapi.com/contacts/v1/contact/?hapikey=833abbb1-b326-400b-bdea-49f369ebe644";
+		$ch = @curl_init();
+		@curl_setopt($ch, CURLOPT_POST, true);
+		@curl_setopt($ch, CURLOPT_POSTFIELDS, $post_json);
+		@curl_setopt($ch, CURLOPT_URL, $endpoint);
+		@curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+		@curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$response = @curl_exec($ch);
+		$status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$curl_errors = curl_error($ch);
+		@curl_close($ch);
+		if ($status_code == 200) {
+			header('Location: thank.php');
+			die();
+		}else{
+			$message = 'Email đã tồn tại';
+		}
 	}
 }
 ?>
@@ -346,20 +396,19 @@ if(isset($_POST['name'])) {
 							<p style="color: red; "> <?php echo $message; ?></p>
 						<?php } ?>
 						<div class="fct">
-							<input id="name" name="name" value="<?php if(isset($_POST['name'])) { echo $_POST['name']; } ?>" type="text" required placeholder="Họ tên *:" required oninvalid="setCustomValidity('Họ tên không để trống')" oninput="setCustomValidity('')">
-							<input id="email" name="email" value="<?php if(isset($_POST['email'])) { echo $_POST['email']; } ?>" type="text" required placeholder="Email *:" required pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" oninvalid="setCustomValidity('Email không chính xác!')" oninput="setCustomValidity('')">
-							<input id="phone" name="phone" value="<?php if(isset($_POST['phone'])) { echo $_POST['phone']; } ?>" type="text" required placeholder="Điện thoại *:" required pattern="^[0-9]{10,12}$" oninvalid="setCustomValidity('Số điện thoại không đúng')" oninput="setCustomValidity('')">
-							<select id="region" name="region" required oninvalid="setCustomValidity('Đăng ký tư vấn tại không để trống')" oninput="setCustomValidity('')">
+							<input id="name" name="name" value="<?php if(isset($_POST['name'])) { echo $_POST['name']; } ?>" type="text" required placeholder="Họ tên *:" required oninvalid="setCustomValidity('Họ tên không để trống')" oninput="setCustomValidity('')" <?php if(isset($check_messages['name'])) { echo $check_messages['name']; } ?>>
+							<input id="email" name="email" value="<?php if(isset($_POST['email'])) { echo $_POST['email']; } ?>" type="text" required placeholder="Email *:" required pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" oninvalid="setCustomValidity('Email không chính xác!')" oninput="setCustomValidity('')" <?php if(isset($check_messages['email'])) { echo $check_messages['email']; } ?>>
+							<input id="phone" name="phone" value="<?php if(isset($_POST['phone'])) { echo $_POST['phone']; } ?>" type="text" required placeholder="Điện thoại *:" required pattern="^[0-9]{10,12}$" oninvalid="setCustomValidity('Số điện thoại không đúng')" oninput="setCustomValidity('')" <?php if(isset($check_messages['phone'])) { echo $check_messages['phone']; } ?>>
+							<select id="region" name="region" required oninvalid="setCustomValidity('Đăng ký tư vấn tại không để trống')" oninput="setCustomValidity('')" <?php if(isset($check_messages['region'])) { echo $check_messages['region']; } ?>>
 								<option value="" style="color:#ccc">Đăng ký tư vấn tại</option>
 								<option value="1" style="color:blue" <?php if(isset($_POST['region'])){if($_POST['region']==1) { ?> selected <?php } }?> >TP Hồ Chí Minh</option>
 								<option value="2" style="color:red" <?php if(isset($_POST['region'])){if($_POST['region']==2) { ?> selected <?php } }?>>Hà Nội</option>
 							</select>
-							<!--					<textarea name="itext" id="itext" cols="30" rows="10" placeholder="Dịch vụ quan tâm *:"></textarea>-->
 							<input type="hidden" name="aff_source" id="aff_source" class="aff_source" value=""/>
 							<input type="hidden" name="aff_sid" id="aff_sid" class="aff_sid" value=""/>
 						</div>
 						<div class="dkbt">
-							<input class="target fbt bmk submit_s" type="submit" value="Đăng ký">
+							<input class="target fbt bmk submit_s" type="submit" name="submit" value="Đăng ký">
 						</div>
 					</form>
 				</article>
@@ -382,18 +431,11 @@ if(isset($_POST['name'])) {
 				<div class="ftbox col1">
 					<div class="logocenter"><img src="media/images/logoft.png"></div>
 					<p>Giấy phép hoạt động số 181/BYT-GPHĐ <br>Chứng chỉ hành nghề số 003474/HNO-CCHN</p>
-					<!--  <div><b>Website : <a href="http://benhvienthammykangnam.vn/">www.benhvienthammykangnam.vn</a></b></div> -->
-					<!--  <div class="bstv-hl">Bác sĩ tư vấn (24/7) <b></b>
-                     </div> -->
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="ftbox col2">
 					<div class="place">Hà Nội</div>
-					<!-- <div>
-                      Tel: <a href="tel:0473006466">04.73.00.64.66</a><br>Mobile:<a class="zalovb" href="tel:0968999777" rel="nofollow">0968.999.777</a>
-                      <hr>
-                    </div> -->
 					<div><a class="chidan" rel="nofollow" target="_blank" href="https://www.google.com/maps/place/Th%E1%BA%A9m+M%E1%BB%B9+Vi%E1%BB%87n+Kangnam+T%E1%BA%A1i+H%C3%A0+N%E1%BB%99i/@21.0189961,105.8516408,16z/data=!4m2!3m1!1s0x3135ab920d07ad6b:0xaeafc086533191b">38 - Nguyễn Du - Q. Hai Bà Trưng - HN</a>
 					</div>
 				</div>
@@ -401,10 +443,6 @@ if(isset($_POST['name'])) {
 			<div class="col-sm-4">
 				<div class="ftbox col2">
 					<div class="place">Tp. Hồ Chí Minh </div>
-					<!-- <div>
-                      Tel: <a href="tel:0873066466">08.73.06.64.66</a><br>Mobile: <a class="zalovb" href="tel:0948449988" id="callme" rel="nofollow">0948.44.99.88</a>
-                      <hr>
-                    </div> -->
 					<div>
 						<a class="chidan" rel="nofollow" target="_blank" href="https://maps.google.com/maps?q=Th%E1%BA%A9m+m%E1%BB%B9+vi%E1%BB%87n+Kangnam+T%E1%BA%A1i+H%E1%BB%93+Ch%C3%AD+Minh&amp;hl=vi&amp;ie=UTF8&amp;sll=10.773004,106.675208&amp;sspn=0.012521,0.021136&amp;hq=Th%E1%BA%A9m+m%E1%BB%B9+vi%E1%BB%87n+Kangnam+T%E1%BA%A1i&amp;hnear=Th%C3%A0nh+ph%E1%BB%91+H%E1%BB%93+Ch%C3%AD+Minh,+H%E1%BB%93+Ch%C3%AD+Minh,+Vi%E1%BB%87t+Nam&amp;t=m&amp;z=12">Số 84A - Bà Huyện Thanh Quan, P.9- Q.3- TP HCM</a>
 					</div>
@@ -452,9 +490,6 @@ if(isset($_POST['name'])) {
 	$("#aff_source").val(getCookie("_aff_network"));
 	$("#aff_sid").val(getCookie("_aff_sid"));
 </script>
-
-
-
 </body>
 </html>
 
