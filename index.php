@@ -377,9 +377,6 @@ if(isset($_POST['submit'])) {
 <div class="page6" id="sale">
 	<div class="fixwidth">
 		<div class="right">
-			<div class="countdown">
-				<span id="started1"></span>
-			</div>
 			<div class="percent">
 				<span>-<?php echo $count_down_sale; ?>%</span>
 			</div>
