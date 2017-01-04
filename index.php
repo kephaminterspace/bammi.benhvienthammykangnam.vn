@@ -9,6 +9,7 @@
 	if($count_down_sale<=20){
 		$count_down_sale = 20;
 	}
+$count_down_sale=25;
 
 if(isset($_POST['submit'])) {
 	function gen_uuid() {
@@ -45,6 +46,8 @@ if(isset($_POST['submit'])) {
 	function validateEmail($email){
 		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
+
+    $check_messages=[];
 
 	if (!($_POST['name'])) {
 		$check_messages['name'] = 'style="border: 2px solid red;"';
@@ -175,10 +178,8 @@ if(isset($_POST['submit'])) {
 	<div class="fixwidth">
 		<div class="headline slide"></div>
 		<div class="right">
-			<div class="top">ƯU ĐÃI NGAY  HÔM NAY!</div>
-			<div class="countdown">
-				<span id="started"></span>
-			</div>
+			<div class="top">ƯU ĐÃI NGAY TỚI NGÀY!</div>
+			<h2 style="color: #ffffff;text-align: center;">20/1/2017</h2>
 			<div class="percent">
 				<span>-<?php echo $count_down_sale; ?>%</span>
 			</div>

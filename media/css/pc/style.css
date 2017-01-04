@@ -9329,7 +9329,8 @@ h4 {
 .page1 .right {
   width: 350px;
   right: 0;
-  bottom: 190px;
+  /*bottom: 190px;*/
+  bottom: 250px;
   position: absolute;
 }
 
@@ -9338,8 +9339,8 @@ h4 {
   color: #fff;
   text-transform: uppercase;
   text-align: center;
-  position: absolute;
-  top: -170px;
+  /*position: absolute;*/
+  /*top: -170px;*/
   left: 75px;
 }
 
